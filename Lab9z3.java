@@ -16,6 +16,12 @@ class Linia extends Figura {
 
     public void rysuj() {
         System.out.println("Rysowanie linii o długości: " + dlugosc);
+        int i = 0;
+        while (i < dlugosc) {
+            System.out.print("-");
+            i++;
+        }
+        System.out.println();
     }
 }
 
@@ -26,6 +32,17 @@ class Kwadrat extends Figura {
 
     public void rysuj() {
         System.out.println("Rysowanie kwadratu o boku: " + dlugosc);
+        int i = 0;
+        while (i < dlugosc) {
+            int j = 0;
+            while (j < dlugosc) {
+                System.out.print("*");
+                j++;
+            }
+            System.out.println();
+            i++;
+        }
+
     }
 }
 public class Lab9z3 {
