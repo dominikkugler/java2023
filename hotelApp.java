@@ -53,6 +53,17 @@ class Hotel {
         rooms = new ArrayList<>();
     }
 
+    public void displayAllRooms() {
+        System.out.println("List of all rooms:");
+        for (Room room : rooms) {
+            System.out.println("Room Number: " + room.getRoomNumber());
+            System.out.println("Cost per Night: " + room.getRoomCost());
+            System.out.println("Number of People: " + room.getRoomNumberOfPeople());
+            System.out.println("Reserved: " + (room.isReserved() ? "Yes" : "No"));
+            System.out.println("----------------------");
+        }
+    }
+
     public void addRoom(Room room) {
         rooms.add(room);
     }
@@ -132,6 +143,8 @@ public class hotelApp {
         hotel.loadFromFile("rooms.txt");
 
         while (true) {
+            hotel.displayAllRooms();        
+
             System.out.println("1. Add Room");
             System.out.println("2. Reserve Room");
             System.out.println("3. Cancel Reservation");
