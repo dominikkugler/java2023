@@ -1,35 +1,45 @@
-public class Lab10z3{
-    public static void main(String[] args) {
-    Ksiazka ksiazka = new Ksiazka(1);
-    Czasopismo czasopismo = new Czasopismo(2);
-    Wolumin[] tabObj = new Wolumin[2];
-    tabObj[0] = ksiazka;
-    tabObj[1] = czasopismo;
-    if(tabObj[0] instanceof Ksiazka){
-        System.out.println("tabObj[0] jest instancja klasy Ksiazka");
-    }
-    if(tabObj[1] instanceof Czasopismo){
-            System.out.println("tabObj[1] jest instancja klasy Czasopismo");
-        }
-    }
-}
-abstract class Wolumin{
+abstract class Wolumin {
     protected int id;
-    Wolumin(int id){
-        this.id = id;
+
+    public Wolumin() {
+        // Automatyczne przypisanie kolejnego numeru do pola id
+        id = generateNextId();
+    }
+
+    private static int nextId = 1;
+
+    private static int generateNextId() {
+        return nextId++;
     }
 }
-class Ksiazka extends Wolumin{
-    Ksiazka(int id){
-        super(id);
+
+class Ksiazka extends Wolumin {
+    private String tytul;
+    private String autor;
+
+    public Ksiazka(String tytul, String autor) {
+        this.tytul = tytul;
+        this.autor = autor;
     }
-    String tytul;
-    String autor;
 }
-class Czasopismo extends Wolumin{
-    Czasopismo(int id){
-        super(id);
+
+class Czasopismo extends Wolumin {
+    private String tytul;
+    private int numerWydania;
+
+    public Czasopismo(String tytul, int numerWydania) {
+        this.tytul = tytul;
+        this.numerWydania = numerWydania;
     }
-    String tytul;
-    int numer_wydania;
+}
+
+public class Lab10z3 {
+    public static void main(String[] args) {
+        Ksiazka ksiazka = new Ksiazka("Tytul ksiazki", "Autor ksiazki");
+        Czasopismo czasopismo = new Czasopismo("Tytul czasopisma", 1);
+
+        Wolumin[] tabObj = new Wolumin[2];
+        tabObj[0] = ksiazka;
+        tabObj[1] = czasopismo;
+    }
 }

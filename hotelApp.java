@@ -140,7 +140,11 @@ public class hotelApp {
         Hotel hotel = new Hotel();
         Scanner scanner = new Scanner(System.in);
 
-        hotel.loadFromFile("rooms.txt");
+        try {
+            hotel.loadFromFile("rooms.dat");
+        } catch ( ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error loading data from file: " + e.getMessage());
+        }
 
         while (true) {
             hotel.displayAllRooms();        
@@ -182,6 +186,7 @@ public class hotelApp {
                         break;
                     case 4:
                         System.out.println("Exiting program...");
+                        scanner.close();
                         return;
                     default:
                         System.out.println("Invalid choice. Please try again.");
@@ -193,7 +198,7 @@ public class hotelApp {
             } catch (RoomAlreadyBookedException e) {
                 System.out.println(e.getMessage());
             }
-            hotel.saveToFile("rooms.txt");
+            hotel.saveToFile("rooms.dat");
         }
         
     }

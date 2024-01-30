@@ -23,7 +23,7 @@ class Uczen{
     }
 }
 class Student extends Uczen{
-    private int waga1;
+    protected int waga1;
     public Student(int waga1){
         super();
         this.waga1 = waga1;
