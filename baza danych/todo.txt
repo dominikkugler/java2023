@@ -1,4 +1,3 @@
-- wyjscia z petli
-- sortowanie
+
 - poprawki graficzne
-- 
+- zerowanie listy

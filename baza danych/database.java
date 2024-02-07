@@ -143,7 +143,6 @@ class carDB {
         int horsePower = scanner.nextInt();
         Car car = new Car(make, model, year, engineSize, horsePower);
         addCar(car);
-        scanner.close();
     }
 
     public void modifyCar(Car car) {
@@ -202,7 +201,6 @@ class carDB {
                 car.setHorsePower(horsePower);
             } break;
         }
-        scanner.close();
     }
 
     public void menu(String filename) {
@@ -213,7 +211,7 @@ class carDB {
         boolean quit = false;
 
         while (!quit) {
-            while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6) {
+            choice = 0;
             if (cars.size() > 0) {
                 displayCar(cars.get(currentIndex), currentIndex);
             } else {
@@ -226,7 +224,6 @@ class carDB {
             System.out.println("5. Modyfikuj samochod");
             System.out.println("6. Wyjdz");
             choice = scanner.nextInt();
-            }
 
             switch (choice) {
                 case 1:
@@ -256,13 +253,14 @@ class carDB {
                     modifyCar(cars.get(currentIndex));
                     break;
                 case 6:
-                    quit = true;    
+                    quit = true;       
+                    break;
+                default:
+                    System.out.println("Niepoprawny wybor");
                     break;
             }
             saveToFile(filename);
-            choice = 0;
         }
-        scanner.close();
     }
     
 
@@ -270,6 +268,7 @@ class carDB {
         int choice = 0;
         Scanner scanner = new Scanner(System.in);
         while (choice!=3) {
+            choice = 0;
             while (choice!=1 && choice!=2 && choice!=3) {
                 System.out.println("1. Wyswietl baze danych");
                 System.out.println("2. Sortuj baze danych");
@@ -282,13 +281,12 @@ class carDB {
                     menu(filename);
                     break;
                 case 2: 
-                    //sortDB();
+                    sortDB(filename);
                     break;
                 case 3:
                     break;
             }
         }
-        scanner.close();
     }
 
     public void createFile() {
@@ -296,7 +294,6 @@ class carDB {
         System.out.println("Podaj nazwe pliku: ");
         System.out.println("Plik musi być w formacie bazaXX.dat");
         String filename = scanner.next();
-
         if (DBname(filename)) {
             File file = new File(filename);
             try {
@@ -312,7 +309,6 @@ class carDB {
                 e.printStackTrace();
             }
         }
-        scanner.close();
     }
 
     public void openFile() {
@@ -328,7 +324,6 @@ class carDB {
         } else {
             System.out.println("Plik nie istnieje");
         }
-        scanner.close();
     }
 
     public void deleteFile() {
@@ -351,10 +346,66 @@ class carDB {
                 System.out.println("Plik nie zostal usuniety");
             }
         }
-        scanner.close();
     }
 
+    public void sortDB(String filename) {
+        loadFromFile(filename);
+        int choice = 0;
+        Scanner scanner = new Scanner(System.in);
+        while (choice!=1 && choice!=2) {
+            System.out.println("1. Sortuj rosnąco");
+            System.out.println("2. Sortuj malejąco");
+            choice = scanner.nextInt();
+        }
+        int choice2 = 0;
+        while (choice2!=1 && choice2!=2 && choice2!=3 && choice2!=4 && choice2!=5) {
+            System.out.println("1. Sortuj po marce");
+            System.out.println("2. Sortuj po modelu");
+            System.out.println("3. Sortuj po roku");
+            System.out.println("4. Sortuj po pojemnosci silnika");
+            System.out.println("5. Sortuj po mocy");
+            choice2 = scanner.nextInt();
+        }
 
+        switch (choice2) {
+            case 1: 
+                if (choice == 1) {
+                    cars.sort((Car c1, Car c2) -> c1.getMake().compareTo(c2.getMake()));
+                } else {
+                    cars.sort((Car c1, Car c2) -> c2.getMake().compareTo(c1.getMake()));
+                }
+                break;
+            case 2: 
+                if (choice == 1) {
+                    cars.sort((Car c1, Car c2) -> c1.getModel().compareTo(c2.getModel()));
+                } else {
+                    cars.sort((Car c1, Car c2) -> c2.getModel().compareTo(c1.getModel()));
+                }
+                break;
+            case 3: 
+                if (choice == 1) {
+                    cars.sort((Car c1, Car c2) -> c1.getYear() - c2.getYear());
+                } else {
+                    cars.sort((Car c1, Car c2) -> c2.getYear() - c1.getYear());
+                }
+                break;
+            case 4: 
+                if (choice == 1) {
+                    cars.sort((Car c1, Car c2) -> c1.getEngineSize() - c2.getEngineSize());
+                } else {
+                    cars.sort((Car c1, Car c2) -> c2.getEngineSize() - c1.getEngineSize());
+                }
+                break;
+            case 5: 
+                if (choice == 1) {
+                    cars.sort((Car c1, Car c2) -> c1.getHorsePower() - c2.getHorsePower());
+                } else {
+                    cars.sort((Car c1, Car c2) -> c2.getHorsePower() - c1.getHorsePower());
+                }
+                break;
+        }
+        saveToFile(filename);
+    }
 }
 
 public class database {
@@ -362,15 +413,14 @@ public class database {
         int choice = 0;
         Scanner scanner = new Scanner(System.in);
         carDB carDB = new carDB();
+        boolean quit = false;
 
-        while (choice!=4) {
-            while (choice!=1 && choice!=2 && choice!=3 && choice!=4) {
-                System.out.println("1. Utworz baze danych");
-                System.out.println("2. Otworz baze danych");
-                System.out.println("3. Usun baze danych");
-                System.out.println("4. Wyjdz");
-                choice = scanner.nextInt();
-            }
+        while (!quit) {
+            System.out.println("1. Utworz baze danych");
+            System.out.println("2. Otworz baze danych");
+            System.out.println("3. Usun baze danych");
+            System.out.println("4. Wyjdz");
+            choice = scanner.nextInt();
 
             switch (choice) {
                 case 1: 
@@ -382,11 +432,14 @@ public class database {
                 case 3: 
                     carDB.deleteFile();
                     break;
-                
                 case 4: 
+                    quit = true;
+                    break;
+                default:
+                    System.out.println("Niepoprawny wybor");
                     break;
             }
+            choice = 0;
         }
-        scanner.close();
     }
 }
