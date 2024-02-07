@@ -1,4 +1,0 @@
-
-- poprawki graficzne
-- zerowanie listy
-- zabezpieczenia formatu
