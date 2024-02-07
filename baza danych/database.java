@@ -1,375 +1,392 @@
+import java.io.BufferedReader;
 import java.io.File;
-import java.util.Scanner;
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Scanner;
 
-class Samochod {
-    private String marka;
+class Car {
+    private String make;
     private String model;
-    private int rokProd;
-    private int pojSilnika;
-    private int mocSilnika;
+    private int year;
+    private int engineSize;
+    private int horsePower;
 
-    public Samochod(String marka, String model, int rokProd, int pojSilnika, int mocSilnika) {
-        this.marka = marka;
+    public Car(String make, String model, int year, int engineSize, int horsePower) {
+        this.make = make;
         this.model = model;
-        this.rokProd = rokProd;
-        this.pojSilnika = pojSilnika;
-        this.mocSilnika = mocSilnika;
+        this.year = year;
+        this.engineSize = engineSize;
+        this.horsePower = horsePower;
     }
 
-    public String getMarka() {
-        return marka;
+    public String getMake() {
+        return make;
     }
 
     public String getModel() {
         return model;
     }
 
-    public int getRokProd() {
-        return rokProd;
+    public int getYear() {
+        return year;
     }
 
-    public int getPojSilnika() {
-        return pojSilnika;
+    public int getEngineSize() {
+        return engineSize;
     }
 
-    public int getMocSilnika() {
-        return mocSilnika;
+    public int getHorsePower() {
+        return horsePower;
     }
 
-    public void setMarka(String marka) {
-        this.marka = marka;
+    public void setMake(String make) {
+        this.make = make;
     }
 
     public void setModel(String model) {
         this.model = model;
     }
 
-    public void setRokProd(int rokProd) {
-        this.rokProd = rokProd;
+    public void setYear(int year) {
+        this.year = year;
     }
 
-    public void setPojSilnika(int pojSilnika) {
-        this.pojSilnika = pojSilnika;
+    public void setEngineSize(int engineSize) {
+        this.engineSize = engineSize;
     }
 
-    public void setMocSilnika(int mocSilnika) {
-        this.mocSilnika = mocSilnika;
+    public void setHorsePower(int horsePower) {
+        this.horsePower = horsePower;
     }
+
 }
 
-class bazaSamochodow {
-    private List<Samochod> samochody;
-    public bazaSamochodow() {
-        samochody = new ArrayList<>();
+class carDB {
+    private List<Car> cars;
+    public carDB() {
+        cars = new ArrayList<Car>();
     }
 
-    public void dodajSamochod(Samochod samochod) {
-        samochody.add(samochod);
+    public void addCar(Car car) {
+        cars.add(car);
     }
 
-    public void usunSamochod(Samochod samochod) {
-        samochody.remove(samochod);
+    public void removeCar(Car car) {
+        cars.remove(car);
     }
 
-    public void wyswietlWszystkieSamochody() {
-        for (Samochod samochod : samochody) {
-            wyswietlSamochod(samochod, samochody.indexOf(samochod));
-        }
-    }
-
-    public void wyswietlSamochod(Samochod samochod, int numer) {
-        System.out.println("Marka: " + samochod.getMarka());
-        System.out.println("Model: " + samochod.getModel());
-        System.out.println("Rok produkcji: " + samochod.getRokProd());
-        System.out.println("Pojemnosc silnika: " + samochod.getPojSilnika());
-        System.out.println("Moc silnika: " + samochod.getMocSilnika());
+    public void displayCar(Car car, int index) {
+        System.out.println("Samochod nr " + index);
+        System.out.println("Marka: " + car.getMake());
+        System.out.println("Model: " + car.getModel());
+        System.out.println("Rok: " + car.getYear());
+        System.out.println("Pojemnosc silnika: " + car.getEngineSize());
+        System.out.println("Moc: " + car.getHorsePower());
         System.out.println();
     }
 
-    void loadFromFile(String fileName) {
-        File file = new File(fileName);
-        try {
-            Scanner scanner = new Scanner(file);
-            while (scanner.hasNextLine()) {
-                String marka = scanner.nextLine();
-                String model = scanner.nextLine();
-                int rokProd = scanner.nextInt();
-                int pojSilnika = scanner.nextInt();
-                int mocSilnika = scanner.nextInt();
-                scanner.nextLine();
-                Samochod samochod = new Samochod(marka, model, rokProd, pojSilnika, mocSilnika);
-                dodajSamochod(samochod);
+    public void saveToFile(String fileName) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter(fileName,false))) {
+            for (Car car : cars) {
+                writer.println(car.getMake());
+                writer.println(car.getModel());
+                writer.println(car.getYear());
+                writer.println(car.getEngineSize());
+                writer.println(car.getHorsePower());
             }
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            writer.close();
+        } catch (IOException e) {
+            System.out.println("Error saving data to file: " + e.getMessage());
         }
-        
     }
 
-    void saveToFile(String fileName) {
-        File file = new File(fileName);
-        try {
-            PrintWriter printWriter = new PrintWriter(file);
-            for (Samochod samochod : samochody) {
-                printWriter.println(samochod.getMarka());
-                printWriter.println(samochod.getModel());
-                printWriter.println(samochod.getRokProd());
-                printWriter.println(samochod.getPojSilnika());
-                printWriter.println(samochod.getMocSilnika());
+    public void loadFromFile(String fileName) {
+        try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String make = line;
+                String model = reader.readLine();
+                int year = Integer.parseInt(reader.readLine());
+                int engineSize = Integer.parseInt(reader.readLine());
+                int horsePower = Integer.parseInt(reader.readLine());
+                Car car = new Car(make, model, year, engineSize, horsePower);
+                addCar(car);
             }
-            printWriter.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            reader.close();
+        } catch (IOException | NumberFormatException e) {
+            System.out.println("Error loading data from file: " + e.getMessage());
         }
     }
-
-    public void sortujBaze() {
-    int choice = 0;
-    Scanner scanner = new Scanner(System.in);
-    while (choice!=1 && choice!=2 && choice!=3 && choice!=4 && choice!=5) {
-        System.out.println("1. Sortuj po marce");
-        System.out.println("2. Sortuj po modelu");
-        System.out.println("3. Sortuj po roku produkcji");
-        System.out.println("4. Sortuj po pojemnosci silnika");
-        System.out.println("5. Sortuj po mocy silnika");
-        System.out.println("6. Wyjscie");
-        choice = scanner.nextInt();
-    }
-    switch (choice) {
-        case 1:
-            Collections.sort(samochody, (s1, s2) -> s1.getMarka().compareTo(s2.getMarka()));
-            break;
-        case 2:
-            Collections.sort(samochody, (s1, s2) -> s1.getModel().compareTo(s2.getModel()));
-            break;
-        case 3:
-            Collections.sort(samochody, (s1, s2) -> Integer.compare(s1.getRokProd(), s2.getRokProd()));
-            break;
-        case 4:
-            Collections.sort(samochody, (s1, s2) -> Integer.compare(s1.getPojSilnika(), s2.getPojSilnika()));
-            break;
-        case 5:
-            Collections.sort(samochody, (s1, s2) -> Integer.compare(s1.getMocSilnika(), s2.getMocSilnika()));
-            break;
-        case 6:
-            break;
+    
+    boolean DBname(String filename) {
+        boolean result = false;
+        if (filename.matches("baza\\d{2}\\.dat")) {
+            result = true;
         }
+        return result;
     }
-
-    public void menuPrzegladuBazy(String fileName) {
-        int choice = 0;
+    public void addToList() {
         Scanner scanner = new Scanner(System.in);
-        while (choice!=1 && choice!=2 && choice!=3) {
-            System.out.println("1. Wyswietl wszystkie samochody");
-            System.out.println("2. Sortuj baze danych");
-            System.out.println("3. Wyjście");
+        System.out.println("Podaj marke: ");
+        String make = scanner.next();
+        System.out.println("Podaj model: ");
+        String model = scanner.next();
+        System.out.println("Podaj rok: ");
+        int year = scanner.nextInt();
+        System.out.println("Podaj pojemnosc silnika: ");
+        int engineSize = scanner.nextInt();
+        System.out.println("Podaj moc: ");
+        int horsePower = scanner.nextInt();
+        Car car = new Car(make, model, year, engineSize, horsePower);
+        addCar(car);
+        scanner.close();
+    }
+
+    public void modifyCar(Car car) {
+        Scanner scanner = new Scanner(System.in);
+        int choice = 0;
+        while (choice!=1 && choice!=2 && choice!=3 && choice!=4 && choice!=5 && choice!=6) {
+            System.out.println("1. Zmien marke");
+            System.out.println("2. Zmien model");
+            System.out.println("3. Zmien rok");
+            System.out.println("4. Zmien pojemnosc silnika");
+            System.out.println("5. Zmien moc");
+            System.out.println("6. Zmien cala zawartosc");;
             choice = scanner.nextInt();
         }
         switch (choice) {
-            case 1:
-                przegladBazy(fileName);
-                break;
-            case 2:
-                sortujBaze();
-                break;
-            case 3:
-                break;
+            case 1: {
+                System.out.println("Podaj nowa marke: ");
+                String make = scanner.next();
+                car.setMake(make);
+            } break;
+            case 2: {
+                System.out.println("Podaj nowy model: ");
+                String model = scanner.next();
+                car.setModel(model);
+            } break;
+            case 3: {
+                System.out.println("Podaj nowy rok: ");
+                int year = scanner.nextInt();
+                car.setYear(year);
+            } break;
+            case 4: {
+                System.out.println("Podaj nowa pojemnosc silnika: ");
+                int engineSize = scanner.nextInt();
+                car.setEngineSize(engineSize);
+            } break;
+            case 5: {
+                System.out.println("Podaj nowa moc: ");
+                int horsePower = scanner.nextInt();
+                car.setHorsePower(horsePower);
+            } break;
+            case 6: {
+                System.out.println("Podaj nowa marke: ");
+                String make = scanner.next();
+                System.out.println("Podaj nowy model: ");
+                String model = scanner.next();
+                System.out.println("Podaj nowy rok: ");
+                int year = scanner.nextInt();
+                System.out.println("Podaj nowa pojemnosc silnika: ");
+                int engineSize = scanner.nextInt();
+                System.out.println("Podaj nowa moc: ");
+                int horsePower = scanner.nextInt();
+                car.setMake(make);
+                car.setModel(model);
+                car.setYear(year);
+                car.setEngineSize(engineSize);
+                car.setHorsePower(horsePower);
+            } break;
         }
+        scanner.close();
     }
 
-    public void dodajDoListy() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Podaj marke samochodu: ");
-        String marka = scanner.next();
-        System.out.println("Podaj model samochodu: ");
-        String model = scanner.next();
-        System.out.println("Podaj rok produkcji samochodu: ");
-        int rokProd = scanner.nextInt();
-        System.out.println("Podaj pojemnosc silnika samochodu: ");
-        int pojSilnika = scanner.nextInt();
-        System.out.println("Podaj moc silnika samochodu: ");
-        int mocSilnika = scanner.nextInt();
-        Samochod samochod = new Samochod(marka, model, rokProd, pojSilnika, mocSilnika);
-        dodajSamochod(samochod);
-    }
-
-    public void usunElementListy(int numer) {
-        samochody.remove(numer);
-    }
-
-    public void modyfikujRekord(int numer) {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Podaj marke samochodu: ");
-        String marka = scanner.next();
-        System.out.println("Podaj model samochodu: ");
-        String model = scanner.next();
-        System.out.println("Podaj rok produkcji samochodu: ");
-        int rokProd = scanner.nextInt();
-        System.out.println("Podaj pojemnosc silnika samochodu: ");
-        int pojSilnika = scanner.nextInt();
-        System.out.println("Podaj moc silnika samochodu: ");
-        int mocSilnika = scanner.nextInt();
-        Samochod samochod = new Samochod(marka, model, rokProd, pojSilnika, mocSilnika);
-        samochody.set(numer, samochod);
-    }
-
-    public void przegladBazy(String fileName) {
-        loadFromFile(fileName);
+    public void menu(String filename) {
+        loadFromFile(filename);
         int choice = 0;
+        int currentIndex = 0;
         Scanner scanner = new Scanner(System.in);
+        boolean quit = false;
 
-        wyswietlWszystkieSamochody();
-
-        while (choice!=1 && choice!=2 && choice!=3 && choice!=4) {
-            System.out.println("1. Dodaj samochod");
-            System.out.println("2. Usun samochod");
-            System.out.println("3. Modifikuj rekord");
-            System.out.println("4. Wyjscie");
-            choice = scanner.nextInt();
-        }
-        switch (choice) {
-            case 1:
-                dodajDoListy();
-                break;
-            case 2:
-                System.out.println("Podaj numer samochodu do usuniecia: ");
-                int numerUsun = scanner.nextInt();
-                usunElementListy(numerUsun);
-                break;
-            case 3:
-                System.out.println("Podaj numer samochodu do modyfikacji: ");
-                int numerMod = scanner.nextInt();
-                modyfikujRekord(numerMod);
-                break;
-            case 4:
-                break;
-        }
-        saveToFile(fileName);
-        
-    }
-
-    static boolean DBname(String filename) {
-        boolean spr=false, spr1=false;
-        if (filename.length()==10) {
-            String strb = "baza";
-            String strroz = ".dat";
-            String str1 = filename.substring(0,4);
-            String str2 = filename.substring(4,6);
-            String str3 = filename.substring(6,10);
-            int wynik21=0,wynik22=0;
-            int wynik1 = str1.compareTo(strb);
-            int wynik3 = str3.compareTo(strroz);
-            char ch1 = str2.charAt(0);
-            char ch2 = str2.charAt(1);
-            if (Character.isDigit(ch1)) wynik21=1;
-            if (Character.isDigit(ch2)) wynik22=1;
-            int wynik = wynik1+wynik21+wynik22+wynik3;
-            if (wynik==2) spr=true;
-        }
-        if (spr==false||spr1==false) System.out.println("Bledna nazwa pliku");
-            else System.out.println("Nazwa pliku jest poprawna");
-        return spr;
-    }
-
-    public String utworzBaze() {
-        Scanner scanner = new Scanner(System.in);
-        System.out.println("Podaj nazwe pliku: ");
-        String fileName = scanner.next();
-        if (DBname(fileName)) {
-            File file = new File(fileName);
-            if (file.exists()) {
-                System.out.println("Plik juz istnieje");
-                fileName = null;
+        while (!quit) {
+            while (choice != 1 && choice != 2 && choice != 3 && choice != 4 && choice != 5 && choice != 6) {
+            if (cars.size() > 0) {
+                displayCar(cars.get(currentIndex), currentIndex);
             } else {
-                try {
-                    file.createNewFile();
-                    System.out.println("Plik zostal utworzony");
-                    file = new File(fileName);
-                    menuPrzegladuBazy(fileName);
-                    
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    fileName = null;
-                }
+                System.out.println("Brak samochodow w bazie");
+            }
+            System.out.println("1. Wyswietl kolejny samochod");
+            System.out.println("2. Wyswietl poprzedni samochod");
+            System.out.println("3. Usun samochod");
+            System.out.println("4. Dodaj samochod (na koniec listy)");
+            System.out.println("5. Modyfikuj samochod");
+            System.out.println("6. Wyjdz");
+            choice = scanner.nextInt();
+            }
+
+            switch (choice) {
+                case 1:
+                    if (currentIndex < cars.size() - 1) {
+                        currentIndex++;
+                    } else {
+                        System.out.println("Brak kolejnego samochodu");
+                    }
+                    break;
+                case 2:
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                    } else {
+                        System.out.println("Brak poprzedniego samochodu");
+                    }
+                    break;
+                case 3:
+                    removeCar(cars.get(currentIndex));
+                    if (currentIndex > 0) {
+                        currentIndex--;
+                    }
+                    break;
+                case 4:
+                    addToList();
+                    break;
+                case 5:
+                    modifyCar(cars.get(currentIndex));
+                    break;
+                case 6:
+                    quit = true;    
+                    break;
+            }
+            saveToFile(filename);
+            choice = 0;
+        }
+        scanner.close();
+    }
+    
+
+    public void menuOverview(String filename) {
+        int choice = 0;
+        Scanner scanner = new Scanner(System.in);
+        while (choice!=3) {
+            while (choice!=1 && choice!=2 && choice!=3) {
+                System.out.println("1. Wyswietl baze danych");
+                System.out.println("2. Sortuj baze danych");
+                System.out.println("3. Wyjdz");
+                choice = scanner.nextInt();
+            }
+
+            switch (choice) {
+                case 1: 
+                    menu(filename);
+                    break;
+                case 2: 
+                    //sortDB();
+                    break;
+                case 3:
+                    break;
             }
         }
-        return fileName;
-        
+        scanner.close();
     }
 
-    public String otworzBaze() {
+    public void createFile() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Podaj nazwe pliku: ");
-        String fileName = scanner.next();
-        File file = new File(fileName);
-        if (file.exists()) {
-            System.out.println("Baza danych zostala otwarta");
+        System.out.println("Plik musi być w formacie bazaXX.dat");
+        String filename = scanner.next();
 
-            menuPrzegladuBazy(fileName);
-            return fileName;
+        if (DBname(filename)) {
+            File file = new File(filename);
+            try {
+                boolean result = file.createNewFile();
+                if (result) {
+                    System.out.println("Plik zostal utworzony");
+                    menuOverview(filename);
+                } else {
+                    System.out.println("Plik juz istnieje");
+                }
+            
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        scanner.close();
+    }
+
+    public void openFile() {
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Podaj nazwe pliku: ");
+        System.out.println("Plik musi być w formacie bazaXX.dat");
+        String filename = scanner.next();
+        File file = new File(filename);
+
+        if (file.exists()) {
+            System.out.println("Baza została otwarta");
+            menuOverview(filename);
         } else {
             System.out.println("Plik nie istnieje");
-            return null;
         }
+        scanner.close();
     }
 
-    public void usunBaze(String openedFile) {
+    public void deleteFile() {
         Scanner scanner = new Scanner(System.in);
         int choice = 0;
         System.out.println("Podaj nazwe pliku do usuniecia: ");
-        String fileName = scanner.next();
-        File file = new File(fileName);
+        System.out.println("Plik musi być w formacie bazaXX.dat");
+        String filename = scanner.next();
+        File file = new File(filename);
+
         if (file.exists()) {
-            System.out.println("Czy na pewno chcesz usunac plik?");
-            System.out.println("1. Tak");
-            System.out.println("2. Nie");
-            choice = scanner.nextInt();
-            switch (choice) {
-                case 1:
-                    file.delete();
-                    break;
-                case 2:
-                    break;
+            while (choice!=1 && choice!=2) {
+                System.out.println("Czy na pewno chcesz usunac plik? (1 - Tak, 2 - Nie)");
+                choice = scanner.nextInt();
+            }
+            if (choice == 1) {
+                file.delete();
+                System.out.println("Plik zostal usuniety");
+            } else {
+                System.out.println("Plik nie zostal usuniety");
             }
         }
+        scanner.close();
     }
+
+
 }
 
 public class database {
     public static void main(String[] args) {
-        bazaSamochodow baza = new bazaSamochodow();
         int choice = 0;
         Scanner scanner = new Scanner(System.in);
-        String openedFile = null;
+        carDB carDB = new carDB();
 
-        while (choice!=1 && choice!=2 && choice!=3 && choice!=4) {
-            System.out.println("1. Utworz baze danych");
-            System.out.println("2. Otworz baze danych");
-            System.out.println("3. Usun baze danych");
-            System.out.println("4. Wyjscie");
-            choice = scanner.nextInt();
+        while (choice!=4) {
+            while (choice!=1 && choice!=2 && choice!=3 && choice!=4) {
+                System.out.println("1. Utworz baze danych");
+                System.out.println("2. Otworz baze danych");
+                System.out.println("3. Usun baze danych");
+                System.out.println("4. Wyjdz");
+                choice = scanner.nextInt();
+            }
+
+            switch (choice) {
+                case 1: 
+                    carDB.createFile();
+                    break;
+                case 2: 
+                    carDB.openFile();
+                    break;
+                case 3: 
+                    carDB.deleteFile();
+                    break;
+                
+                case 4: 
+                    break;
+            }
         }
-        switch (choice) {
-            case 1:
-                openedFile = baza.utworzBaze();
-                break;
-            case 2:
-                openedFile = baza.otworzBaze();
-                break;
-            case 3:
-                baza.usunBaze(openedFile);
-                break;
-            case 4:
-                System.out.println("Zamykanie programu");
-                break;
-        }
+        scanner.close();
     }
 }

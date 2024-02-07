@@ -1,0 +1,4 @@
+- wyjscia z petli
+- sortowanie
+- poprawki graficzne
+- 
