@@ -126,6 +126,8 @@ class carDB {
         boolean result = false;
         if (filename.matches("baza\\d{2}\\.dat")) {
             result = true;
+        } else {
+            System.out.println("Nazwa pliku musi byc w formacie bazaXX.dat");
         }
         return result;
     }
@@ -136,10 +138,25 @@ class carDB {
         System.out.println("Podaj model: ");
         String model = scanner.next();
         System.out.println("Podaj rok: ");
+        while (!scanner.hasNextInt()) {
+            System.out.println("To nie jest liczba calkowita");
+            System.out.println("Podaj rok: ");
+            scanner.next();
+        }
         int year = scanner.nextInt();
-        System.out.println("Podaj pojemnosc silnika: ");
+        System.out.println("Podaj pojemnosc silnika [cm3]: ");
+        while (!scanner.hasNextInt()) {
+            System.out.println("To nie jest liczba calkowita");
+            System.out.println("Podaj pojemnosc silnika [cm3]: ");
+            scanner.next();
+        }
         int engineSize = scanner.nextInt();
         System.out.println("Podaj moc: ");
+        while (!scanner.hasNextInt()) {
+            System.out.println("To nie jest liczba calkowita");
+            System.out.println("Podaj moc: ");
+            scanner.next();
+        }
         int horsePower = scanner.nextInt();
         Car car = new Car(make, model, year, engineSize, horsePower);
         addCar(car);
@@ -170,16 +187,31 @@ class carDB {
             } break;
             case 3: {
                 System.out.println("Podaj nowy rok: ");
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest liczba calkowita");
+                    System.out.println("Podaj nowy rok: ");
+                    scanner.next();
+                }
                 int year = scanner.nextInt();
                 car.setYear(year);
             } break;
             case 4: {
                 System.out.println("Podaj nowa pojemnosc silnika: ");
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest liczba calkowita");
+                    System.out.println("Podaj nowa pojemnosc silnika: ");
+                    scanner.next();
+                }
                 int engineSize = scanner.nextInt();
                 car.setEngineSize(engineSize);
             } break;
             case 5: {
                 System.out.println("Podaj nowa moc: ");
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest liczba calkowita");
+                    System.out.println("Podaj nowa moc: ");
+                    scanner.next();
+                }
                 int horsePower = scanner.nextInt();
                 car.setHorsePower(horsePower);
             } break;
@@ -189,10 +221,25 @@ class carDB {
                 System.out.println("Podaj nowy model: ");
                 String model = scanner.next();
                 System.out.println("Podaj nowy rok: ");
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest liczba calkowita");
+                    System.out.println("Podaj nowy rok: ");
+                    scanner.next();
+                }
                 int year = scanner.nextInt();
                 System.out.println("Podaj nowa pojemnosc silnika: ");
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest liczba calkowita");
+                    System.out.println("Podaj nowa pojemnosc silnika: ");
+                    scanner.next();
+                }
                 int engineSize = scanner.nextInt();
                 System.out.println("Podaj nowa moc: ");
+                while (!scanner.hasNextInt()) {
+                    System.out.println("To nie jest liczba calkowita");
+                    System.out.println("Podaj nowa moc: ");
+                    scanner.next();
+                }
                 int horsePower = scanner.nextInt();
                 car.setMake(make);
                 car.setModel(model);
@@ -241,9 +288,13 @@ class carDB {
                     }
                     break;
                 case 3:
-                    removeCar(cars.get(currentIndex));
-                    if (currentIndex > 0) {
-                        currentIndex--;
+                    if (cars.size() > 0) {
+                        removeCar(cars.get(currentIndex));
+                        if (currentIndex > 0) {
+                            currentIndex--;
+                        }
+                    } else {
+                        System.out.println("Nie mozna usunac samochodu z pustej bazy danych");
                     }
                     break;
                 case 4:
